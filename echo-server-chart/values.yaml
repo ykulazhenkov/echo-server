@@ -10,7 +10,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 
-podAnnotations: {}
+annotations: {}
+labels: {}
 
 service:
   type: ClusterIP
