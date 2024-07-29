@@ -1,0 +1,28 @@
+name: "Push helm chart on push to main"
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  package-and-push-helm-chart:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: install helm
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: latest
+
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: push chart
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO_OWNER: ${{ github.repository_owner }}
+        run: |
+          helm registry login ghcr.io -u ${GITHUB_REPO_OWNER} -p ${GITHUB_TOKEN}
+          helm push echo-server-chart oci://ghcr.io/${GITHUB_REPO_OWNER}
