@@ -1,5 +1,5 @@
 # Build the image
-FROM golang:1.22 AS builder
+FROM golang:1.22-alpine3.20 AS builder
 
 WORKDIR /workspace
 # Copy the Go Modules manifests
@@ -17,7 +17,7 @@ RUN CGO_ENABLED=0 go build -o echo-server ./cmd/echo-server/main.go
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
-FROM gcr.io/distroless/base-debian11:latest
+FROM alpine:3.20
 WORKDIR /
 COPY --from=builder /workspace/echo-server .
 
